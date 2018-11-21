@@ -148,7 +148,7 @@ public class ClientGui extends Thread{
 
  // chat info
     appendToPane(jtextFilDiscu,"<ul>"
-        +"<b><u>Tal's and Oranit's stolen chat!!~~</n></b>"
+        +"<b><u>Oranit's and Tal's chat aka OT Chat!!~~</n></b>"
         +"<p><b>You have the option to write: </b>"
         +"<p><b>@Name</b> To send a private message to the user'Name'"
         +"</ul><br/>");
