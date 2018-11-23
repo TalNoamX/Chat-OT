@@ -4,42 +4,28 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-
-/*
- * The Client with its GUI
- */
 public class ClientGUI extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	// will first hold "Username:", later on "Enter message"
-	private JLabel label;
-	// to hold the Username and later on the messages
-	private JTextField tf;
-	// to hold the server address an the port number
-	private JTextField tfServer, tfPort;
-	// to Logout and get the list of the users
-	private JButton login, logout, whoIsIn;
-	// for the chat room
-	private JTextArea ta;
-	// if it is for connection
-	private boolean connected;
-	// the Client object
-	private Client client;
-	// the default port number
-	private int defaultPort;
-	private String defaultHost;
+	private JLabel label;						// will first hold "Username:", later on "Enter message"
+	private JTextField tf;						// to hold the Username and later on the messages
+	private JTextField tfServer, tfPort; 		// to hold the server address and the port number
+	private JButton login, logout, whoIsIn;		// to Logout and get the list of the users
+	private JTextArea cRoom;					// for the chat room
+	private boolean connected;					// if it is for connection
+	private Client client;						// the Client object
+	private int myPort;					// the default port number
+	private String myHost;
 
 	// Constructor connection receiving a socket number
-	ClientGUI(String host, int port) {
-
+	 ClientGUI(String host, int port) {
 		super("Chat Client");
-		defaultPort = port;
-		defaultHost = host;
+		myPort = port;
+		myHost = host;
 		
-		// The NorthPanel with:
-		JPanel northPanel = new JPanel(new GridLayout(3,1));
-		// the server name anmd the port number
-		JPanel serverAndPort = new JPanel(new GridLayout(1,5, 1, 3));
+		JPanel northPanel = new JPanel(new GridLayout(3,1)); // The NorthPanel.
+		JPanel serverAndPort = new JPanel(new GridLayout(1,5, 1, 3)); // the server name and the port number.
+		
 		// the two JTextField with default value for server address and port number
 		tfServer = new JTextField(host);
 		tfPort = new JTextField("" + port);
@@ -50,22 +36,22 @@ public class ClientGUI extends JFrame implements ActionListener {
 		serverAndPort.add(new JLabel("Port Number:  "));
 		serverAndPort.add(tfPort);
 		serverAndPort.add(new JLabel(""));
-		// adds the Server an port field to the GUI
+		// adds the Server a port field to the GUI
 		northPanel.add(serverAndPort);
 
 		// the Label and the TextField
-		label = new JLabel("Enter your username below", SwingConstants.CENTER);
+		label = new JLabel("Enter your name: ", SwingConstants.CENTER);
 		northPanel.add(label);
-		tf = new JTextField("Anonymous");
-		tf.setBackground(Color.WHITE);
+		tf = new JTextField("John Doe");
+		tf.setBackground(Color.PINK);
 		northPanel.add(tf);
 		add(northPanel, BorderLayout.NORTH);
 
 		// The CenterPanel which is the chat room
-		ta = new JTextArea("Welcome to the Chat room\n", 80, 80);
+		cRoom = new JTextArea("Welcome to the Chat room\n", 80, 80);
 		JPanel centerPanel = new JPanel(new GridLayout(1,1));
-		centerPanel.add(new JScrollPane(ta));
-		ta.setEditable(false);
+		centerPanel.add(new JScrollPane(cRoom));
+		cRoom.setEditable(false);
 		add(centerPanel, BorderLayout.CENTER);
 
 		// the 3 buttons
@@ -88,50 +74,43 @@ public class ClientGUI extends JFrame implements ActionListener {
 		setSize(600, 600);
 		setVisible(true);
 		tf.requestFocus();
-
 	}
 
 	// called by the Client to append text in the TextArea 
-	void append(String str) {
-		ta.append(str);
-		ta.setCaretPosition(ta.getText().length() - 1);
+	 void append(String str) {
+		cRoom.append(str);
+		cRoom.setCaretPosition(cRoom.getText().length() - 1);
 	}
-	// called by the GUI is the connection failed
-	// we reset our buttons, label, textfield
-	void connectionFailed() {
+	// called by the GUI if the connection failed
+	// we reset our buttons, label, textfield.
+	  void connectionFailed() {
 		login.setEnabled(true);
 		logout.setEnabled(false);
 		whoIsIn.setEnabled(false);
-		label.setText("Enter your username below");
-		tf.setText("Anonymous");
-		// reset port number and host name as a construction time
-		tfPort.setText("" + defaultPort);
-		tfServer.setText(defaultHost);
-		// let the user change them
-		tfServer.setEditable(false);
+		label.setText("Enter your name: ");
+		tf.setText("John Doe");
+		tfPort.setText("" + myPort); // reset port number and host name as a construction time
+		tfServer.setText(myHost);
+		tfServer.setEditable(false); // let the user change them
 		tfPort.setEditable(false);
-		// don't react to a <CR> after the username
-		tf.removeActionListener(this);
+		tf.removeActionListener(this); // don't react to a <CR> after the username
 		connected = false;
 	}
 		
-	/*
-	* Button or JTextField clicked
-	*/
+	// Button or JTextField clicked
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
-		// if it is the Logout button
+		// if it is the "Logout" button
 		if(o == logout) {
 			client.sendMessage(new ChatMessage(ChatMessage.LOGOUT, ""));
 			return;
 		}
-		// if it the who is in button
+		// if it's the "who is in" button
 		if(o == whoIsIn) {
 			client.sendMessage(new ChatMessage(ChatMessage.WHOISIN, ""));				
 			return;
 		}
-
-		// ok it is coming from the JTextField
+		// if it is coming from the JTextField
 		if(connected) {
 			// just have to send the message
 			client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, tf.getText()));				
@@ -141,53 +120,41 @@ public class ClientGUI extends JFrame implements ActionListener {
 		
 
 		if(o == login) {
-			// ok it is a connection request
-			String username = tf.getText().trim();
-			// empty username ignore it
-			if(username.length() == 0)
-				return;
-			// empty serverAddress ignore it
-			String server = tfServer.getText().trim();
-			if(server.length() == 0)
-				return;
-			// empty or invalid port numer, ignore it
-			String portNumber = tfPort.getText().trim();
-			if(portNumber.length() == 0)
-				return;
+			String username = tf.getText().trim(); // if it is a connection request
+			if(username.length() == 0) return; // empty username ignore it
+			String server = tfServer.getText().trim(); // empty serverAddress ignore it
+			
+			if(server.length() == 0) return;
+			String portNumber = tfPort.getText().trim(); // empty or invalid port number, ignore it
+
+			if(portNumber.length() == 0) return;
 			int port = 0;
+			
 			try {
 				port = Integer.parseInt(portNumber);
 			}
-			catch(Exception en) {
-				return;   // nothing I can do if port number is not valid
-			}
+			catch(Exception en) { return; } // nothing I can do if port number is not valid
 
-			// try creating a new Client with GUI
-			client = new Client(server, port, username, this);
+			client = new Client(server, port, username, this); // try creating a new Client with GUI
+
 			// test if we can start the Client
-			if(!client.start()) 
-				return;
+			if(!client.start()) return;
 			tf.setText("");
 			label.setText("Enter your message below");
 			connected = true;
 			
-			// disable login button
-			login.setEnabled(false);
+			login.setEnabled(false); // disable login button
 			// enable the 2 buttons
-			logout.setEnabled(true);
+			logout.setEnabled(true); 
 			whoIsIn.setEnabled(true);
 			// disable the Server and Port JTextField
 			tfServer.setEditable(false);
 			tfPort.setEditable(false);
-			// Action listener for when the user enter a message
-			tf.addActionListener(this);
+			tf.addActionListener(this);	// Action listener for when the user enter a message
 		}
-
 	}
-
 	// to start the whole thing the server
 	public static void main(String[] args) {
-		new ClientGUI("localhost", 1500);
+		new ClientGUI("localhost", 8080);
 	}
-
 }
