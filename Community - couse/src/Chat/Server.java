@@ -4,7 +4,11 @@ import java.io.*;
 import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
+/**
+ * This class represents the server side of the char.
+ * @author Tal
+ *@author Oranit
+ */
 public class Server {
 	private static int uniqueId; 	// a unique ID for each connection
 	private ArrayList<ClientThread> cList; 	// an ArrayList to keep the list of the Client

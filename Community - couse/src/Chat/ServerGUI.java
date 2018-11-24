@@ -2,7 +2,11 @@ package Chat;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-
+/**
+ * This class represents the server GUI. all the server side GUI is in here.
+ * @author Tal
+ *@author Oranit
+ */
 public class ServerGUI extends JFrame implements ActionListener, WindowListener {
 	
 	private static final long serialVersionUID = 1L;

@@ -3,7 +3,11 @@ package Chat;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-
+/**
+ * This class represents the client GUI. all the client side GUI is in here.
+ * @author Tal
+ *@author Oranit
+ */
 public class ClientGUI extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
@@ -16,16 +20,19 @@ public class ClientGUI extends JFrame implements ActionListener {
 	private Client client;						// the Client object
 	private int myPort;					// the default port number
 	private String myHost;
-
-	// Constructor connection receiving a socket number
-	 ClientGUI(String host, int port) {
+	/**
+	 * Constructor connection receiving a socket number
+	 * @param host
+	 * @param port
+	 */
+	ClientGUI(String host, int port) {
 		super("Chat Client");
 		myPort = port;
 		myHost = host;
-		
+
 		JPanel northPanel = new JPanel(new GridLayout(3,1)); // The NorthPanel.
 		JPanel serverAndPort = new JPanel(new GridLayout(1,5, 1, 3)); // the server name and the port number.
-		
+
 		// the two JTextField with default value for server address and port number
 		tfServer = new JTextField(host);
 		tfPort = new JTextField("" + port);
@@ -75,15 +82,19 @@ public class ClientGUI extends JFrame implements ActionListener {
 		setVisible(true);
 		tf.requestFocus();
 	}
-
-	// called by the Client to append text in the TextArea 
-	 void append(String str) {
+	/**
+	 * called by the Client to append text in the TextArea 
+	 * @param str
+	 */
+	void append(String str) {
 		cRoom.append(str);
 		cRoom.setCaretPosition(cRoom.getText().length() - 1);
 	}
-	// called by the GUI if the connection failed
-	// we reset our buttons, label, textfield.
-	  void connectionFailed() {
+	/**
+	 * called by the GUI if the connection failed
+	 * we reset our buttons, label, textfield.
+	 */
+	void connectionFailed() {
 		login.setEnabled(true);
 		logout.setEnabled(false);
 		whoIsIn.setEnabled(false);
@@ -96,8 +107,9 @@ public class ClientGUI extends JFrame implements ActionListener {
 		tf.removeActionListener(this); // don't react to a <CR> after the username
 		connected = false;
 	}
-		
-	// Button or JTextField clicked
+	/**
+	 * Button or JTextField clicked
+	 */
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
 		// if it is the "Logout" button
@@ -117,19 +129,19 @@ public class ClientGUI extends JFrame implements ActionListener {
 			tf.setText("");
 			return;
 		}
-		
+
 
 		if(o == login) {
 			String username = tf.getText().trim(); // if it is a connection request
 			if(username.length() == 0) return; // empty username ignore it
 			String server = tfServer.getText().trim(); // empty serverAddress ignore it
-			
+
 			if(server.length() == 0) return;
 			String portNumber = tfPort.getText().trim(); // empty or invalid port number, ignore it
 
 			if(portNumber.length() == 0) return;
 			int port = 0;
-			
+
 			try {
 				port = Integer.parseInt(portNumber);
 			}
@@ -142,7 +154,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 			tf.setText("");
 			label.setText("Enter your message below");
 			connected = true;
-			
+
 			login.setEnabled(false); // disable login button
 			// enable the 2 buttons
 			logout.setEnabled(true); 
@@ -153,7 +165,10 @@ public class ClientGUI extends JFrame implements ActionListener {
 			tf.addActionListener(this);	// Action listener for when the user enter a message
 		}
 	}
-	// to start the whole thing the server
+	/**
+	 * to start the whole thing the server
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		new ClientGUI("localhost", 8080);
 	}
