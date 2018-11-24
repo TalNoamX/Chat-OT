@@ -1,4 +1,4 @@
-package NewChat_1;
+package Chat;
 
 import javax.swing.*;
 import java.awt.*;
