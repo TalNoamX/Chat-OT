@@ -12,7 +12,7 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 	private Server server;	// my server.
 
 	// server constructor that receive the port to listen to for connection as parameter
-	public ServerGUI(int port) {
+	 ServerGUI(int port) {
 		super("Chat Server");
 		server = null;
 		JPanel top = new JPanel(); // in the top Panel - the PortNumber, the Start, and Stop buttons.
