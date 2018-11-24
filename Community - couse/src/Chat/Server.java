@@ -13,15 +13,23 @@ public class Server {
 	private int port; 	// the port number to listen for connection
 	private boolean keepGoing; 	// the boolean that will be turned of to stop the server
 
-	//server constructor that receive the port to listen to for connection.
+	/**
+	 * a server constructor that receive the port to listen to for connection.
+	 * 
+	 * @param port - port number
+	 * @param serGUI - ServerGuI object to connect to the GUI
+	 */
 	public Server(int port, ServerGUI serGUI) {
 		this.serGUI = serGUI;
 		this.port = port;
 		sdf = new SimpleDateFormat("HH:mm:ss"); // to display hh:mm:ss
 		cList = new ArrayList<ClientThread>();	// ArrayList for the Client list
 	}
-
-	public void start() { // create socket server and wait for connection requests
+	/**
+	 * starting a new connection
+	 * create a socket server and wait for connection requests
+	 */
+	public void start() { 
 		keepGoing = true;
 		try {
 			ServerSocket serverSocket = new ServerSocket(port); // the socket used by the server
@@ -62,7 +70,7 @@ public class Server {
 			display(msg);
 		}
 	}		
-	/*
+	/**
 	 * For the GUI to stop the server
 	 */
 	protected void stop() {
@@ -75,14 +83,19 @@ public class Server {
 		}
 	}
 
-	// Display an event.
+	/**
+	 * Display an event.
+	 * @param msg .
+	 */
 	private void display(String msg) {
 		String time = sdf.format(new Date()) + " " + msg;
 		serGUI.appendEvent(time + "\n");
 	}
-	/*
-	 *  to broadcast a message to all Clients
+	/**
+	 * Broadcast a message to all Clients
+	 * @param message - The message that will be sent to everyone
 	 */
+	 
 	private synchronized void broadcast(String message) {
 		String time = sdf.format(new Date());		// add HH:mm:ss and \n to the message
 		String messageLf = time + " " + message + "\n";
@@ -101,7 +114,10 @@ public class Server {
 		}
 	}
 
-	// for a client who log off using the LOGOUT message
+	/**
+	 * for a client who log off using the LOGOUT message
+	 * @param id - the user's ID
+	 */
 	synchronized void remove(int id) {
 		// scan the array list until we found the Id
 		for(int i = 0; i < cList.size(); ++i) {
@@ -114,7 +130,12 @@ public class Server {
 		}
 	}
 
-	/** One instance of this thread will run for each client */
+	/**
+	 * One instance of this thread will run for each client 
+	 * @author Oranit 
+	 * @author Tal
+	 *
+	 */
 	class ClientThread extends Thread {
 		Socket socket; 	// the socket where to listen/talk
 		ObjectInputStream sInput;
@@ -124,7 +145,10 @@ public class Server {
 		ChatMessage cm;	// the only type of message a will receive
 		String date; // the date I connect
 
-		// Constructor
+		/**\
+		 * Constructor
+		 * @param socket - a new socket that we need to create for each client
+		 */
 		ClientThread(Socket socket) {
 			id = ++uniqueId; // a unique id
 			this.socket = socket;
@@ -144,7 +168,7 @@ public class Server {
 			}
 			date = new Date().toString() + "\n";
 		}
-
+	
 		public void run() {
 			// to loop until LOGOUT
 			boolean keepGoing = true;
@@ -189,7 +213,9 @@ public class Server {
 			close();
 		}
 
-		// try to close everything
+		/**
+		 * try to close everything
+		 */
 		private void close() {
 			// try to close the connection
 			try {
@@ -200,7 +226,11 @@ public class Server {
 			catch (Exception e) {}
 		}
 
-		// Write a String to the Client output stream
+		/**
+		 *  Write a String to the Client output stream
+		 * @param msg
+		 * @return if the server has succeded.
+		 */
 		private boolean writeMsg(String msg) {
 			// if Client is still connected send the message to it
 			if(!socket.isConnected()) {

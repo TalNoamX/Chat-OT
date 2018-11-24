@@ -11,7 +11,10 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 	private JTextField tPortNumber;	// The port number.
 	private Server server;	// my server.
 
-	// server constructor that receive the port to listen to for connection as parameter
+	/**
+	 * server constructor that receive the port to listen to for connection as parameter
+	 * @param port
+	 */
 	public ServerGUI(int port) {
 		super("Chat Server");
 		server = null;
@@ -42,8 +45,11 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 		setVisible(true);
 	}		
 
-	// append message to the two JTextArea
-	// position at the end
+	/**
+	 *  append message to the two JTextArea
+	 *  position at the end
+	 * @param str
+	 */
 	void appendRoom(String str) {
 		chat.append(str);
 		chat.setCaretPosition(chat.getText().length() - 1);
@@ -54,7 +60,9 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 		
 	}
 	
-	// start or stop where clicked
+	/**
+	 * start or stop where clicked
+	 */
 	public void actionPerformed(ActionEvent e) {
 		// if running we have to stop
 		if(server != null) {
@@ -78,7 +86,9 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 		stopStart.setText("Stop");
 		tPortNumber.setEditable(false);
 	}
-	// If the user click the X button to close the application close the sever connection.
+	/**
+	 *  If the user click the X button to close the application close the sever connection.
+	 */
 	public void windowClosing(WindowEvent e) {
 		// if my Server exist
 		if(server != null) {
@@ -93,7 +103,9 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 		System.exit(0);
 	}
 	
-	// I can ignore the other WindowListener method
+	/**
+	 * Ignore the other WindowListener method - we don't need them.
+	 */
 	public void windowClosed(WindowEvent e) {}
 	public void windowOpened(WindowEvent e) {}
 	public void windowIconified(WindowEvent e) {}
@@ -101,7 +113,12 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 	public void windowActivated(WindowEvent e) {}
 	public void windowDeactivated(WindowEvent e) {}
 
-	// A thread to run the Server
+	/**
+	 * A thread to run the Server
+	 * @author Oranit
+	 * @author Tal
+	 *
+	 */
 	class ServerRunning extends Thread {
 		public void run() {
 			server.start(); // should execute until it fails
@@ -112,7 +129,10 @@ public class ServerGUI extends JFrame implements ActionListener, WindowListener 
 			server = null;
 		}
 	}
-	// entry point to start the Server
+	/**
+	 * entry point to start the Server
+	 * @param arg
+	 */
 	public static void main(String[] arg) {
 		new ServerGUI(8080); // start server default port 8080
 	}
