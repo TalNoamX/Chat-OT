@@ -77,6 +77,7 @@ public class Server {
 	/**
 	 * For the GUI to stop the server
 	 */
+	@SuppressWarnings("resource")
 	protected void stop() {
 		keepGoing = false;
 		try {

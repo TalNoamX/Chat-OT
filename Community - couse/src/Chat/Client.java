@@ -1,7 +1,6 @@
 package Chat;
 import java.net.*;
 import java.io.*;
-import java.util.*;
 /**
  * This class represents the client side of the chat
  * @author Tal
